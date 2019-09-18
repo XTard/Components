@@ -33,7 +33,7 @@ div.searchable {
     border-top: none;
     max-height: 180px;
     margin: 0;
-    overflow-y: scroll;
+    overflow-y: hidden;
     overflow-x: hidden;
     padding: 0;
 }
