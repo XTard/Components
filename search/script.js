@@ -16,10 +16,17 @@ function filterDropdown () {
 
 	container.find("ul li.selected").removeAttr("selected");
 }
-function customScroll (direction) {
-container.find("ul li.selected").removeAttr("class").nextAll("li").not('[style*="display: none"]').first().addClass("selected");
-
-container.find("ul li.selected").removeAttr("class").prevAll("li").not('[style*="display: none"]').first().addClass("selected");
+function customScroll (e, direction) {
+	e.preventDefault();
+	if (container.find("ul li:visible").hasClass("selected") === true) {
+		if (direction == "up") {
+			container.find("ul li.selected").removeAttr("class").prevAll("li").not('[style*="display: none"]').first().addClass("selected");
+		} else if (direction == "down") {
+			container.find("ul li.selected").removeAttr("class").nextAll("li").not('[style*="display: none"]').first().addClass("selected");
+		}
+	} else if (container.find("ul li:visible").hasClass("selected") === false) {
+		container.find("ul li:visible").first().addClass("selected");
+	}
 }
 function eventControl (e) {
 	// console.log(e.type);
@@ -73,21 +80,23 @@ function eventControl (e) {
 		let deltaY = e.originalEvent.deltaY,
 			detail = e.originalEvent.detail;
 
-		if (container.find("ul li:visible").hasClass("selected") === false)
-			container.find("ul li:visible").first().addClass("selected");
 		console.log("detail " + e.originalEvent.detail + " Y - " + e.originalEvent.deltaY);
 		// DOWN ++
 		// UP --
 		if (typeof deltaY === 'number') {
 			if (deltaY > 0) {
+				customScroll(e, "down");
 				console.log("down");
 			} else if (deltaY < 0) {
+				customScroll(e, "up");
 				console.log("up");
 			}
 		} else if (typeof detail === 'number' && detail !== 0) {
 			if (deltaY > 0) {
+				customScroll(e, "down");
 				console.log("down");
 			} else if (deltaY < 0) {
+				customScroll(e, "up");
 				console.log("up");
 			}
 		}
@@ -122,8 +131,7 @@ function eventControl (e) {
 	}
 	else if (e.type == "touchmove") {
 		e.preventDefault();
-		// $(document).on('touchmove', function (e) {
-			var currentY = e.originalEvent.touches[0].clientY;
+			let currentY = e.originalEvent.touches[0].clientY;
 			$("#qwe").text(e.originalEvent.touches[0].clientY);
 		     if (currentY > lastY) {
 			 	$("#kek").text("down");
@@ -134,7 +142,6 @@ function eventControl (e) {
 		     }
 		     lastY = currentY;
 			 /* console.log(e.originalEvent.touches[0].clientY); */
-		// });
 	}
 	// container.find("ul li.selected")[0].scrollIntoView({
 	// 	behavior: "smooth",
